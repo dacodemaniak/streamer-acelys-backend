@@ -30,6 +30,12 @@ public class StudentController {
         return studentService.fromProjection();
     }
 
+    @CrossOrigin
+    @GetMapping("dto")
+    public List<SimpleStudentDto> simpleStudentDtos() {
+        return studentService.findSimpleStudents();
+    }
+
     /**
      * POST a new student
      * uri : POST http://127.0.0.1:5000/api/v1/students
