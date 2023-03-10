@@ -1,5 +1,7 @@
 package fr.aelion.streamer.controllers;
 
+import fr.aelion.streamer.dto.SimpleStudentDto;
+import fr.aelion.streamer.dto.SimpleStudentProjection;
 import fr.aelion.streamer.entities.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,12 @@ public class StudentController {
     @CrossOrigin
     public List<Student> findAll() {
         return studentService.findAll();
+    }
+
+    @GetMapping("simple")
+    @CrossOrigin
+    public List<SimpleStudentProjection> findSimpleStudents() {
+        return studentService.fromProjection();
     }
 
     /**
