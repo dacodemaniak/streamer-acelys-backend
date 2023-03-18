@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,11 +28,30 @@ public class CourseServiceImpl implements CourseService {
                     // Make as many ModuleDto as needed
                     var modules = c.getModules();
                     for (var module : modules) {
-                        var moduleDto = new ModuleDto();
                         fullCourseDto.addModule(module);
                     }
                     return fullCourseDto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public FullCourseDto findOne(int id) {
+       return repository.findById(id)
+               .map((c) -> {
+                   var fullCourseDto = new FullCourseDto();
+                   fullCourseDto.setId(c.getId());
+                   fullCourseDto.setTitle(c.getTitle());
+                   fullCourseDto.setCreatedAt(c.getCreatedAt());
+                   fullCourseDto.setUpdatedAt(c.getUpdatedAt());
+                   // Make as many ModuleDto as needed
+                   var modules = c.getModules();
+                   for (var module : modules) {
+                       fullCourseDto.addModule(module);
+                   }
+                   return fullCourseDto;
+               })
+               .orElseThrow();
+
     }
 }

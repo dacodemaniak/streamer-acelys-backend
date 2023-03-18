@@ -19,18 +19,15 @@ public class StudentController {
     private StudentService studentService;
 
     @GetMapping
-    @CrossOrigin
     public List<Student> findAll() {
         return studentService.findAll();
     }
 
     @GetMapping("simple")
-    @CrossOrigin
     public List<SimpleStudentProjection> findSimpleStudents() {
         return studentService.fromProjection();
     }
 
-    @CrossOrigin
     @GetMapping("dto")
     public List<SimpleStudentDto> simpleStudentDtos() {
         return studentService.findSimpleStudents();
@@ -43,7 +40,6 @@ public class StudentController {
      * @return
      */
     @PostMapping
-    @CrossOrigin
     public ResponseEntity<?> add(@RequestBody Student student) {
         try {
             Student newStudent = studentService.add(student);
@@ -51,6 +47,5 @@ public class StudentController {
         } catch(Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-
     }
 }
