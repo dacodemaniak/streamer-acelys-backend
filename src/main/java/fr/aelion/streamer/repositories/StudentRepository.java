@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer> {
     public Student findByEmail(String email);
-
+    public Student findByLogin(String login);
     @Query("SELECT s.id id, s.lastName lastName, s.firstName firstName, s.email email FROM Student s")
     public List<SimpleStudentProjection> getSimpleStudents();
 
