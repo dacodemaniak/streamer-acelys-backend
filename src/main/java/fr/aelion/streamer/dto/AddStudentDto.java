@@ -7,21 +7,23 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddStudentDto {
-    @NotBlank
+    @NotBlank(message = "Lastname cannot be null")
     private String lastName;
 
     private String firstName;
 
-    @NotNull
-    @Email
+    @NotNull(message = "Email cannot be null")
+    @Email(message = "email passed is not a valid email")
     private String email;
 
     private String phoneNumber;
 
-    @NotBlank
+    @NotBlank(message = "login cannot be null")
+    @Size(min = 8, message="Login must have at least 8 chars")
     private String login;
 
-    @NotBlank
+    @NotBlank(message = "password cannot be null")
+    @Size(min = 8, message="Password must have at least 8 chars")
     //@Pattern(regexp = "/^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/")
     private String password;
 }

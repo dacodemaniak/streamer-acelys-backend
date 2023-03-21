@@ -48,7 +48,6 @@ public class StudentService {
     }
 
     public Student add(AddStudentDto student) throws Exception {
-
        Student anyStudent = repository.findByEmail(student.getEmail());
         if (anyStudent != null) {
             throw new EmailAlreadyExistsException("Email " + student.getEmail() + " already exists");
