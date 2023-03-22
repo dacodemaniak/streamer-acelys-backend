@@ -61,4 +61,17 @@ public class StudentService {
 
         return newStudent;
     }
+
+    public void update(Student student) throws Exception {
+        try {
+            repository.save(student);
+        } catch(Exception e) {
+            throw new Exception("Something went wrong while updating Student");
+        }
+    }
+    public Student findOne(int id) {
+        return repository.findById(id)
+                .map(s -> s)
+                .orElseThrow();
+    }
 }

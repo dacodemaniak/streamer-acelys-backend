@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.NoSuchElementException;
+
 import fr.aelion.streamer.services.StudentService;
 
 @RestController
@@ -28,7 +30,12 @@ public class StudentController {
     }
     @GetMapping("{id}") // GET http://127.0.0.1:5000/api/v1/students/1
     public ResponseEntity<?> findOne(@PathVariable int id) {
-        return ResponseEntity.ok("Have to find a Student with id : " + id);
+        try {
+            return ResponseEntity.ok(studentService.findOne(id));
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>( "Student with " + id + " was not found", HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @GetMapping("simple")
@@ -58,6 +65,16 @@ public class StudentController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body((e.reject()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+    @PutMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> update(@RequestBody Student student) {
+        try {
+            studentService.update(student);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
