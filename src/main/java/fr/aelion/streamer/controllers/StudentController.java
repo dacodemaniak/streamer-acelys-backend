@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import fr.aelion.streamer.services.StudentService;
 
@@ -35,7 +36,6 @@ public class StudentController {
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>( "Student with " + id + " was not found", HttpStatus.NOT_FOUND);
         }
-
     }
 
     @GetMapping("simple")
@@ -76,5 +76,22 @@ public class StudentController {
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> singleDelete(@PathVariable int id) {
+        try {
+            studentService.delete(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> multipleDelete(@RequestBody Set<Integer> ids) {
+        return ResponseEntity.ok(studentService.multipleDelete(ids));
     }
 }

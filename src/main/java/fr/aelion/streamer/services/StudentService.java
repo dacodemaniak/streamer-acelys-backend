@@ -13,7 +13,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,5 +76,29 @@ public class StudentService {
         return repository.findById(id)
                 .map(s -> s)
                 .orElseThrow();
+    }
+
+    public void delete(int id) {
+        try {
+            var student = this.findOne(id);
+            repository.delete(student);
+        } catch (NoSuchElementException e) {
+            throw e;
+        }
+    }
+
+    public Set<Integer> multipleDelete(Set<Integer> ids) {
+        var nonDeletedIds = new HashSet<Integer>();
+        ids.stream()
+                .forEach(i -> {
+                    try {
+                        repository.delete(this.findOne(i));
+                    } catch(NoSuchElementException e) {
+                        nonDeletedIds.add(i);
+                    } catch (Exception e) {
+                        nonDeletedIds.add(i);
+                    }
+                });
+        return nonDeletedIds;
     }
 }
