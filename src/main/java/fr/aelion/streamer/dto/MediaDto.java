@@ -12,6 +12,7 @@ public class MediaDto {
     private String title;
     private String summary;
     private Float duration;
+    private String totalTime;
     private LocalDate createdAt;
     private String url;
     private TypeMediaDto typeMedia;

@@ -55,6 +55,10 @@ public class CourseServiceImpl implements CourseService {
 
     private String convertToTime(Set<MediaDto> medias) {
         Float time = medias.stream()
+                .map(m -> {
+                    m.setTotalTime(LocalTime.MIN.plusSeconds(m.getDuration().longValue()).toString());
+                    return m;
+                })
                 .map(m -> m.getDuration())
                 .reduce(Float.valueOf(0), (subtotal, duration) -> subtotal + duration);
         var timeAsLong = Math.round(time);
