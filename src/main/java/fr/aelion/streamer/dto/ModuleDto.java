@@ -16,4 +16,6 @@ public class ModuleDto {
     private Set<MediaDto> medias;
 
     private String totalTime;
+
+    private boolean isSelected = false;
 }

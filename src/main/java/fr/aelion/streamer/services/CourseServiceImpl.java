@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,13 @@ public class CourseServiceImpl implements CourseService {
                     return fullCourseDto;
                 })
                 .collect(Collectors.toList());
+        // Compute media time
+        for (FullCourseDto fc : fullCourses) {
+            for (ModuleDto m : fc.getModules()) {
+                var medias = m.getMedias();
+                m.setTotalTime(convertToTime(medias));
+            }
+        }
         return fullCourses;
     }
 
@@ -51,11 +59,7 @@ public class CourseServiceImpl implements CourseService {
                 .reduce(Float.valueOf(0), (subtotal, duration) -> subtotal + duration);
         var timeAsLong = Math.round(time);
 
-        var hours = time / 3600;
-        var minutes = (time % 3600) / 60;
-        var seconds = time % 60;
-
-        return String.format("%02d:%0dd:%02d", hours, minutes, seconds);
+        return LocalTime.MIN.plusSeconds(timeAsLong).toString();
 
     }
 }
