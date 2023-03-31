@@ -1,5 +1,6 @@
 package fr.aelion.streamer.controllers;
 
+import fr.aelion.streamer.dto.CourseAddDto;
 import fr.aelion.streamer.dto.FullCourseDto;
 import fr.aelion.streamer.entities.Course;
 import fr.aelion.streamer.services.CourseService;
@@ -33,7 +34,17 @@ public class CourseController {
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable() int id) {
-        service.remove(id);
-        return ResponseEntity.noContent().build();
+        try {
+            service.remove(id);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<FullCourseDto> add(@RequestBody CourseAddDto course) {
+        FullCourseDto courseDto = this.service.add(course);
+        return ResponseEntity.ok(courseDto);
     }
 }

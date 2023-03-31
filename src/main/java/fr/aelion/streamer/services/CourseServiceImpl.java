@@ -1,5 +1,6 @@
 package fr.aelion.streamer.services;
 
+import fr.aelion.streamer.dto.CourseAddDto;
 import fr.aelion.streamer.dto.FullCourseDto;
 import fr.aelion.streamer.dto.MediaDto;
 import fr.aelion.streamer.dto.ModuleDto;
@@ -15,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,17 +65,33 @@ public class CourseServiceImpl implements CourseService {
         // Préambule : récupérer le cours dans son intégralité
         var oCourse = repository.findById(id);
 
-        // 1. Update all medias of all modules to null module
-        for (Module module : oCourse.get().getModules()) {
-            for (Media media : module.getMedias()) {
-                media.setModule(null);
-                mediaRepository.save(media);
+        if (oCourse.isPresent()) {
+            // 1. Update all medias of all modules to null module
+            for (Module module : oCourse.get().getModules()) {
+                for (Media media : module.getMedias()) {
+                    media.setModule(null);
+                    mediaRepository.save(media);
+                }
+                moduleRepository.delete(module);
             }
-            moduleRepository.delete(module);
+
+            // 3. Remove course
+            repository.delete(oCourse.get());
+        } else {
+            throw new NoSuchElementException();
         }
 
-        // 3. Remove course
-        repository.delete(oCourse.get());
+    }
+
+    @Override
+    public FullCourseDto add(CourseAddDto course) {
+        var newCourse = new Course();
+        newCourse.setTitle(course.getTitle());
+        newCourse.setObjective(course.getObjective());
+
+        newCourse = repository.save(newCourse);
+
+        return modelMapper.map(newCourse, FullCourseDto.class);
     }
 
     private String convertToTime(Set<MediaDto> medias) {

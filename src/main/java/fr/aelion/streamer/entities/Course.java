@@ -26,4 +26,8 @@ public class Course {
 
     @OneToMany(mappedBy = "course")
     private Set<Module> modules;
+
+    public Course() {
+        this.createdAt = LocalDate.now();
+    }
 }

@@ -1,5 +1,6 @@
 package fr.aelion.streamer.services;
 
+import fr.aelion.streamer.dto.CourseAddDto;
 import fr.aelion.streamer.dto.FullCourseDto;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface CourseService {
 
 
     void remove(int id);
+
+    FullCourseDto add(CourseAddDto course);
 }
