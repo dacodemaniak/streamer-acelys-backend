@@ -61,6 +61,7 @@ public class CourseServiceImpl implements CourseService {
                 })
                 .map(m -> m.getDuration())
                 .reduce(Float.valueOf(0), (subtotal, duration) -> subtotal + duration);
+
         var timeAsLong = Math.round(time);
 
         return LocalTime.MIN.plusSeconds(timeAsLong).toString();
