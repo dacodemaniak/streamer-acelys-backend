@@ -91,6 +91,17 @@ public class CourseServiceImpl implements CourseService {
 
         newCourse = repository.save(newCourse);
 
+        if (course.getModules().size() > 0) {
+            Course finalNewCourse = newCourse;
+            Set<Module> courseModules = new HashSet<>();
+            course.getModules().forEach(mDto -> {
+                var module = modelMapper.map(mDto, Module.class);
+                module.setCourse(finalNewCourse);
+                module = moduleRepository.save(module);
+                courseModules.add(module);
+            });
+            finalNewCourse.setModules(courseModules);
+        }
         return modelMapper.map(newCourse, FullCourseDto.class);
     }
 
