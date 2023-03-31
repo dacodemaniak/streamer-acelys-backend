@@ -7,22 +7,19 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
+@Table(name = "type_media")
 @Getter
 @Setter
-public class Module {
+public class TypeMedia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "id", nullable = false)
+    private Integer id;
 
     @Column(nullable = false)
-    private String name;
+    private String title;
 
-    private String objective;
-
-    @ManyToOne(targetEntity = Course.class)
-    @JoinColumn(name = "course_id")
-    private Course course;
-
-    @OneToMany(mappedBy = "module")
+    @OneToMany
     private List<Media> medias;
+
 }
