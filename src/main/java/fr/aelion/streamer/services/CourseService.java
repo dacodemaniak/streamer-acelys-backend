@@ -11,4 +11,5 @@ public interface CourseService {
     FullCourseDto findOne(int id);
 
 
+    void remove(int id);
 }

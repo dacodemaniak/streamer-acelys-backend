@@ -4,7 +4,11 @@ import fr.aelion.streamer.dto.FullCourseDto;
 import fr.aelion.streamer.dto.MediaDto;
 import fr.aelion.streamer.dto.ModuleDto;
 import fr.aelion.streamer.entities.Course;
+import fr.aelion.streamer.entities.Media;
+import fr.aelion.streamer.entities.Module;
 import fr.aelion.streamer.repositories.CourseRepository;
+import fr.aelion.streamer.repositories.MediaRepository;
+import fr.aelion.streamer.repositories.ModuleRepository;
 import org.hibernate.type.descriptor.DateTimeUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,11 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseRepository repository;
 
+    @Autowired
+    private MediaRepository mediaRepository;
+
+    @Autowired
+    private ModuleRepository moduleRepository;
     @Autowired
     ModelMapper modelMapper;
     public List<FullCourseDto> findAll() {
@@ -51,6 +60,24 @@ public class CourseServiceImpl implements CourseService {
                })
                .orElseThrow();
 
+    }
+
+    @Override
+    public void remove(int id) {
+        // Préambule : récupérer le cours dans son intégralité
+        var oCourse = repository.findById(id);
+
+        // 1. Update all medias of all modules to null module
+        for (Module module : oCourse.get().getModules()) {
+            for (Media media : module.getMedias()) {
+                media.setModule(null);
+                mediaRepository.save(media);
+            }
+            moduleRepository.delete(module);
+        }
+
+        // 3. Remove course
+        repository.delete(oCourse.get());
     }
 
     private String convertToTime(Set<MediaDto> medias) {

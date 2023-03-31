@@ -31,4 +31,9 @@ public class CourseController {
             return ResponseEntity.notFound().build();
         }
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> remove(@PathVariable() int id) {
+        service.remove(id);
+        return ResponseEntity.noContent().build();
+    }
 }
