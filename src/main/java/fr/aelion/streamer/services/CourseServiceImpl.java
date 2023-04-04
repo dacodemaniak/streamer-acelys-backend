@@ -10,7 +10,7 @@ import fr.aelion.streamer.entities.Module;
 import fr.aelion.streamer.repositories.CourseRepository;
 import fr.aelion.streamer.repositories.MediaRepository;
 import fr.aelion.streamer.repositories.ModuleRepository;
-import org.hibernate.type.descriptor.DateTimeUtils;
+import fr.aelion.streamer.services.interfaces.CourseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
