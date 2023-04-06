@@ -2,6 +2,7 @@ package fr.aelion.streamer.controllers;
 
 import fr.aelion.streamer.components.JwtUtil;
 import fr.aelion.streamer.dto.SignupMessage;
+import fr.aelion.streamer.dto.SimpleStudentDto;
 import fr.aelion.streamer.dto.request.UserRequestDto;
 import fr.aelion.streamer.dto.request.UserResponseDto;
 import fr.aelion.streamer.entities.StreamerUser;
@@ -55,11 +56,16 @@ public class UserController {
 
             // Make a token from "authentication" object
             String token = jwtUtil.generateToken(authentication);
+            SimpleStudentDto simpleUser = userAuthService.findByLogin(request.getLogin());
 
             // Create a Response DTO to send to client
             UserResponseDto response = new UserResponseDto();
             response.setJwtToken(token);
             response.setRoles(roles.stream().collect(Collectors.toList()));
+            response.setEmail(simpleUser.getEmail());
+            response.setLastName(simpleUser.getLastName());
+            response.setFirstName(simpleUser.getFirstName());
+            response.setPhoneNumber(simpleUser.getPhoneNumber());
 
             return response;
 

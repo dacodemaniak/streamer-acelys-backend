@@ -8,5 +8,9 @@ import java.util.List;
 @Setter
 public class UserResponseDto {
     private String jwtToken;
+    private String lastName;
+    private String firstName;
+    private String phoneNumber;
+    private String email;
     private List<String> roles;
 }
