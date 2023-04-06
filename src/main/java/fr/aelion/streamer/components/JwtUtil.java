@@ -1,6 +1,8 @@
 package fr.aelion.streamer.components;
 
+import fr.aelion.streamer.services.UserAuthService;
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -9,6 +11,7 @@ import fr.aelion.streamer.errors.jwt.JwtTokenMalformedException;
 import fr.aelion.streamer.errors.jwt.JwtTokenMissingException;
 
 import java.util.Date;
+import java.util.function.Function;
 
 @Component
 public class JwtUtil {
@@ -17,6 +20,9 @@ public class JwtUtil {
 
     @Value("${jwt.token.validity}")
     private Long jwtValidity;
+
+    @Autowired
+    UserAuthService userAuthService;
 
     public String getUserLogin(final String token) {
         try {
@@ -57,6 +63,19 @@ public class JwtUtil {
         } catch (IllegalArgumentException ex) {
             throw new JwtTokenMissingException();
         }
+    }
+
+    public String getLoginFromToken(String token) {
+        return getClaimeFromToken(token, Claims::getSubject);
+    }
+
+    private <T> T getClaimeFromToken(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getAllClaimsFromToken(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims getAllClaimsFromToken(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     }
 
 }

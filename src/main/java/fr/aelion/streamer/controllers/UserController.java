@@ -2,24 +2,24 @@ package fr.aelion.streamer.controllers;
 
 import fr.aelion.streamer.components.JwtUtil;
 import fr.aelion.streamer.dto.SignupMessage;
-import fr.aelion.streamer.dto.SimpleStudentDto;
+import fr.aelion.streamer.dto.SimpleUserDto;
 import fr.aelion.streamer.dto.request.UserRequestDto;
 import fr.aelion.streamer.dto.request.UserResponseDto;
 import fr.aelion.streamer.entities.StreamerUser;
 import fr.aelion.streamer.errors.jwt.DisabledUserException;
 import fr.aelion.streamer.errors.jwt.InvalidCredentialsException;
+import fr.aelion.streamer.errors.jwt.JwtTokenMalformedException;
 import fr.aelion.streamer.services.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,7 +35,29 @@ public class UserController {
 
     @Autowired
     JwtUtil jwtUtil;
+    @GetMapping("{token}")
+    public ResponseEntity<?> validateToken(@PathVariable String token) {
+        try {
+            jwtUtil.validateToken(token);
+            String login = jwtUtil.getUserLogin(token);
+            var simpleUser = userAuthService.findByLogin(login);
 
+            // Create a Response DTO to send to client
+            UserResponseDto response = new UserResponseDto();
+            response.setJwtToken(token);
+            response.setRole(simpleUser.getRole());
+            response.setEmail(simpleUser.getEmail());
+            response.setLastName(simpleUser.getLastName());
+            response.setFirstName(simpleUser.getFirstName());
+            response.setPhoneNumber(simpleUser.getPhoneNumber());
+
+            return ResponseEntity.ok(response);
+        } catch (JwtTokenMalformedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch(IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
     @PostMapping("login")
     public UserResponseDto generateJwtToken(@RequestBody UserRequestDto request) {
         try {
@@ -56,12 +78,12 @@ public class UserController {
 
             // Make a token from "authentication" object
             String token = jwtUtil.generateToken(authentication);
-            SimpleStudentDto simpleUser = userAuthService.findByLogin(request.getLogin());
+            SimpleUserDto simpleUser = userAuthService.findByLogin(request.getLogin());
 
             // Create a Response DTO to send to client
             UserResponseDto response = new UserResponseDto();
             response.setJwtToken(token);
-            response.setRoles(roles.stream().collect(Collectors.toList()));
+            response.setRole(simpleUser.getRole());
             response.setEmail(simpleUser.getEmail());
             response.setLastName(simpleUser.getLastName());
             response.setFirstName(simpleUser.getFirstName());

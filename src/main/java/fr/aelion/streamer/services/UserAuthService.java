@@ -1,6 +1,7 @@
 package fr.aelion.streamer.services;
 
-import fr.aelion.streamer.dto.SimpleStudentDto;
+import fr.aelion.streamer.dto.SimpleUserDto;
+import fr.aelion.streamer.dto.UserRoleDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -73,10 +74,21 @@ public class UserAuthService implements UserDetailsService {
         user.setRole(userDto.getRole());
     }
 
-    public SimpleStudentDto findByLogin(String login) {
+    public SimpleUserDto findByLogin(String login) {
         return userRepository.findByLogin(login)
                 .map(u -> {
-                    return modelMapper.map(u, SimpleStudentDto.class);
+                    var simpleUser = new SimpleUserDto();
+                    simpleUser.setId(u.getId());
+                    simpleUser.setLastName(u.getLastName());
+                    simpleUser.setFirstName(u.getFirstName());
+                    simpleUser.setEmail(u.getEmail());
+                    simpleUser.setPhoneNumber(u.getPhoneNumber());
+                    var role = u.getRole();
+                    var userRole = new UserRoleDto();
+                    userRole.setId(role.getId());
+                    userRole.setRole(role.getRole());
+                    simpleUser.setRole(userRole);
+                    return simpleUser;
                 })
                 .orElseThrow();
     }

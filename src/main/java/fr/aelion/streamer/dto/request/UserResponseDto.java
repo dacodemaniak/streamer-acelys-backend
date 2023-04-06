@@ -1,4 +1,5 @@
 package fr.aelion.streamer.dto.request;
+import fr.aelion.streamer.dto.UserRoleDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,5 +13,5 @@ public class UserResponseDto {
     private String firstName;
     private String phoneNumber;
     private String email;
-    private List<String> roles;
+    private UserRoleDto role;
 }

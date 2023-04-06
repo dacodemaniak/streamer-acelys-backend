@@ -1,7 +1,7 @@
 package fr.aelion.streamer.services;
 
 import fr.aelion.streamer.dto.AddStudentDto;
-import fr.aelion.streamer.dto.SimpleStudentDto;
+import fr.aelion.streamer.dto.SimpleUserDto;
 import fr.aelion.streamer.dto.SimpleStudentProjection;
 
 import fr.aelion.streamer.entities.StreamerUser;
@@ -36,20 +36,20 @@ public class StudentService {
                 .collect(Collectors.toList());
     }
 
-    public List<SimpleStudentDto> findSimpleStudents() {
+    public List<SimpleUserDto> findSimpleStudents() {
         return repository.findAll()
                 .stream()
                 .filter(ur -> ur.getRole() == "Student")
                 .map(ur -> ur.getUsers())
                 .map(s -> {
-                    return modelMapper.map(s, SimpleStudentDto.class);
+                    return modelMapper.map(s, SimpleUserDto.class);
                 })
                 .collect(Collectors.toList());
     }
 
-    public SimpleStudentDto findOne(int id) {
+    public SimpleUserDto findOne(int id) {
         return studentRepository.findById(id)
-                .map(s -> modelMapper.map(s, SimpleStudentDto.class))
+                .map(s -> modelMapper.map(s, SimpleUserDto.class))
                 .orElseThrow();
     }
 }
