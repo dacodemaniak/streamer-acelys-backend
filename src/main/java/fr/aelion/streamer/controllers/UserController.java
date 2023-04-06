@@ -45,6 +45,7 @@ public class UserController {
             // Create a Response DTO to send to client
             UserResponseDto response = new UserResponseDto();
             response.setJwtToken(token);
+            response.setLogin(simpleUser.getLogin());
             response.setRole(simpleUser.getRole());
             response.setEmail(simpleUser.getEmail());
             response.setLastName(simpleUser.getLastName());
@@ -83,6 +84,7 @@ public class UserController {
             // Create a Response DTO to send to client
             UserResponseDto response = new UserResponseDto();
             response.setJwtToken(token);
+            response.setLogin(simpleUser.getLogin());
             response.setRole(simpleUser.getRole());
             response.setEmail(simpleUser.getEmail());
             response.setLastName(simpleUser.getLastName());

@@ -79,6 +79,7 @@ public class UserAuthService implements UserDetailsService {
                 .map(u -> {
                     var simpleUser = new SimpleUserDto();
                     simpleUser.setId(u.getId());
+                    simpleUser.setLogin(u.getLogin());
                     simpleUser.setLastName(u.getLastName());
                     simpleUser.setFirstName(u.getFirstName());
                     simpleUser.setEmail(u.getEmail());

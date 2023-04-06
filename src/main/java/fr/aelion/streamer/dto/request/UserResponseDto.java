@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 public class UserResponseDto {
     private String jwtToken;
+    private String login;
     private String lastName;
     private String firstName;
     private String phoneNumber;

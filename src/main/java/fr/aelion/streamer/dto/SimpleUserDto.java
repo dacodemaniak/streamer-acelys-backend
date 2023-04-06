@@ -13,6 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class SimpleUserDto {
     private int id;
+    private String login;
     private String lastName;
     private String firstName;
     private String email;
