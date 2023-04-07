@@ -1,5 +1,6 @@
 package fr.aelion.streamer.controllers;
 
+import fr.aelion.streamer.dto.SimpleUserDto;
 import fr.aelion.streamer.entities.StreamerUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,12 @@ public class StudentController {
     public List<StreamerUser> findAll() {
         return studentService.findAll();
     }
+
+    @GetMapping("simple")
+    public List<SimpleUserDto> findSimpleStudents() {
+        return studentService.findSimpleStudents();
+    }
+
     @GetMapping("{id}") // GET http://127.0.0.1:5000/api/v1/students/1
     public ResponseEntity<?> findOne(@PathVariable int id) {
         try {
