@@ -1,8 +1,11 @@
 package fr.aelion.streamer.controllers;
 
+import fr.aelion.streamer.dto.SignupMessage;
 import fr.aelion.streamer.dto.SimpleUserDto;
+import fr.aelion.streamer.dto.request.UserRequestDto;
 import fr.aelion.streamer.entities.StreamerUser;
 
+import fr.aelion.streamer.services.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,8 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private UserAuthService userAuthService;
     @GetMapping
     public List<StreamerUser> findAll() {
         return studentService.findAll();
@@ -38,6 +43,13 @@ public class StudentController {
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>( "Student with " + id + " was not found", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("signup")
+    public SignupMessage signup(@RequestBody UserRequestDto request) {
+        this.userAuthService.add(request);
+        SignupMessage message = new SignupMessage("User was successfully registred");
+        return message;
     }
 
 }

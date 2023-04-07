@@ -1,9 +1,11 @@
 package fr.aelion.streamer.services;
 
 import fr.aelion.streamer.dto.AddStudentDto;
+import fr.aelion.streamer.dto.SignupMessage;
 import fr.aelion.streamer.dto.SimpleUserDto;
 import fr.aelion.streamer.dto.SimpleStudentProjection;
 
+import fr.aelion.streamer.dto.request.UserRequestDto;
 import fr.aelion.streamer.entities.StreamerUser;
 import fr.aelion.streamer.entities.UserRole;
 import fr.aelion.streamer.repositories.StreamerUserRepository;
@@ -14,6 +16,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
