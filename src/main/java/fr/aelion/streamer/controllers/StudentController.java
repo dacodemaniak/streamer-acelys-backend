@@ -45,11 +45,10 @@ public class StudentController {
         }
     }
 
-    @PostMapping("signup")
-    public SignupMessage signup(@RequestBody UserRequestDto request) {
+    @PostMapping()
+    public SimpleUserDto signup(@RequestBody UserRequestDto request) {
         this.userAuthService.add(request);
-        SignupMessage message = new SignupMessage("User was successfully registred");
-        return message;
+        return this.userAuthService.findByLogin(request.getLogin());
     }
 
 }

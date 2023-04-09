@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,14 +43,17 @@ public class StudentService {
     }
 
     public List<SimpleUserDto> findSimpleStudents() {
-        return repository.findAll()
+        var list = new ArrayList<SimpleUserDto>();
+        repository.findAll()
                 .stream()
-                .filter(ur -> ur.getRole() == "Student")
-                .map(ur -> ur.getUsers())
-                .map(s -> {
-                    return modelMapper.map(s, SimpleUserDto.class);
-                })
-                .collect(Collectors.toList());
+                .filter(ur -> ur.getRole().equals("Student"))
+                .collect(Collectors.toList())
+                .forEach(ur -> {
+                    ur.getUsers().forEach(u -> {
+                        list.add(modelMapper.map(u, SimpleUserDto.class));
+                    });
+                });
+        return list;
     }
 
     public SimpleUserDto findOne(int id) {
@@ -57,4 +61,6 @@ public class StudentService {
                 .map(s -> modelMapper.map(s, SimpleUserDto.class))
                 .orElseThrow();
     }
+
+
 }

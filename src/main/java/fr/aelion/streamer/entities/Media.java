@@ -28,7 +28,7 @@ public class Media {
     @Column(nullable = false)
     private String url;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "typemedia_id", nullable = false)
     private TypeMedia typeMedia;
 
